@@ -1,6 +1,6 @@
 from pixel_view import run_all_with_proxies, run_with_proxies
 from helper import *
-import logging, sys, asyncio
+import logging, sys, asyncio, random
 
 log = logging.getLogger(__name__)
 log.setLevel(logging.DEBUG)
@@ -22,6 +22,7 @@ if len(rows) == 0:
     sys.exit()
 
 file_ids = [row['url'].split('/u/')[1].split('/')[0].split('?')[0] for row in rows]
+random.shuffle(file_ids)
 
 log.info('Fetching all files...')
 old_link_states = asyncio.run(getAllFileData(file_ids))
