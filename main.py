@@ -1,8 +1,8 @@
 from pixel_view import run_all_with_proxies, run_with_proxies
 from helper import *
-import logging, sys
+import logging, sys, asyncio
 
-
+asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 log = logging.getLogger(__name__)
 log.setLevel(logging.DEBUG)
 log.propagate = False
