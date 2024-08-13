@@ -1,0 +1,9 @@
+requests
+requests[socks]
+asyncio
+aiohttp-proxy
+aiohttp
+bs4
+websockets
+websockets-proxy
+psycopg2

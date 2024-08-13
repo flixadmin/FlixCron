@@ -1,0 +1,20 @@
+name: Pixel Bypass
+
+on:
+  workflow_dispatch:
+
+env:
+  FW_DB_URI: ${{secrets.FW_DB_URI}}
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Requirements
+        run: pip install -r requirements.txt
+
+      - name: Run main script
+        run: python main.py
+
