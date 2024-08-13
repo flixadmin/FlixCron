@@ -7,3 +7,4 @@ bs4
 websockets
 websockets-proxy
 psycopg2
+nest-asyncio

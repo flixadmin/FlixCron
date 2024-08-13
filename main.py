@@ -2,6 +2,9 @@ from pixel_view import run_all_with_proxies, run_with_proxies
 from helper import *
 import logging, sys, asyncio, random
 
+import nest_asyncio
+nest_asyncio.apply()
+
 log = logging.getLogger(__name__)
 log.setLevel(logging.DEBUG)
 log.propagate = False
