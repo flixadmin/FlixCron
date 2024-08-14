@@ -18,7 +18,7 @@ log.addHandler(handler)
 
 
 log.info('Fetching Links...')
-rows = getLinkRows(0)
+rows = getLinkRows(1)
 log.info(f'Fetched {len(rows)} links.')
 
 if len(rows) == 0:
