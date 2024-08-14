@@ -5,6 +5,7 @@ on:
 
 env:
   FW_DB_URI: ${{secrets.FW_DB_URI}}
+  MAIL_URI: ${{secrets.MAIL_URI}}
 
 jobs:
   build:

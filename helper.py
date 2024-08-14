@@ -1,9 +1,17 @@
-import psycopg2, os, time, aiohttp, re, json, asyncio
+import psycopg2, os, time, aiohttp, re, json, asyncio, random, requests, traceback
 from datetime import datetime, timezone
 
 
 def days_from_now(time_str):
     return (datetime.now(timezone.utc) - datetime.strptime(time_str, '%Y-%m-%dT%H:%M:%S.%fZ').replace(tzinfo=timezone.utc)).days
+
+def send_mail(subject:str, body:str):
+    try:
+        r = requests.post(os.environ['MAIL_URI'], data={'s': subject, 'b': body})
+        if not r.json()['success']:
+            raise Exception('Cannot send email. View server logs.')
+    except:
+        print(traceback.format_exc(), flush=True)
 
 def getLinkRows(last_updated_day_ago : int = 0):
     before_time = int(time.time() / 60) - last_updated_day_ago * 24 * 60
@@ -49,10 +57,17 @@ async def getPixelFileData(file_id:str):
 
 
 async def getAllFileData(file_ids : list[str]):
+    fids = file_ids.copy()
     fdatas = {}
-    for task in asyncio.as_completed([getPixelFileData(fid) for fid in file_ids]):
-        fid, fdata = await task
-        fdatas[fid] = fdata
+    att = 0
+    while fids:
+        for task in asyncio.as_completed([getPixelFileData(fid) for fid in fids]):
+            fid, fdata = await task
+            fdatas[fid] = fdata
+            if fdata: fids.remove(fid)
+        att += 1
+        if att > 7: return fdata
+        await asyncio.sleep(random.randint(3, 7))
     return fdatas
 
 

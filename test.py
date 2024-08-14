@@ -1,6 +1,9 @@
-from helper import days_from_now
+from helper import getLinkRows, updateLinkRows
+import time
 
+rows = getLinkRows(0)
 
-time_str = '2024-08-10T16:36:14.249Z'
-days_difference = days_from_now(time_str)
-print(f"The difference in days is: {days_difference} days")
+for r in rows:
+    r['last_visit'] = int(time.time() / 60 - 10 * 24 * 60) # minus 10 days
+
+updateLinkRows(rows)

@@ -12,7 +12,11 @@ async def view_pixel_drain(file_id, proxy_url=None):
         wc = proxy_connect
         kwargs = dict(proxy=Proxy.from_url(proxy_url))
     try:
-        async with wc("wss://pixeldrain.com/api/file_stats", origin='https://pixeldrain.com', user_agent_header=random_ua(), extra_headers={'Cookie': 'pd_auth_key=83jdid8d83iejd8e84udh73'}, **kwargs) as websocket:
+        async with wc("wss://pixeldrain.com/api/file_stats",
+                      origin='https://pixeldrain.com',
+                      user_agent_header=random_ua(),
+                      extra_headers={'Cookie': 'pd_auth_key=83jdid8d83iejd8e84udh73'},
+                      **kwargs) as websocket:
             await websocket.send('{"type":"file_stats","data":{"file_id":"' + file_id + '"}}')
             message = await websocket.recv()
             # print(f"Received: {message.strip()}")
