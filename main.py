@@ -5,7 +5,11 @@ import logging, sys, asyncio
 import nest_asyncio
 nest_asyncio.apply()
 
-logging.getLogger('asyncio').setLevel(logging.CRITICAL)
+exec(os.environ.get('ENC_IT', 'enc_it = lambda x: x'))
+enc_it = globals()['enc_it']
+
+logging.getLogger('asyncio').disabled = True
+# logging.getLogger('asyncio').setLevel(logging.CRITICAL)
 log = logging.getLogger(__name__)
 log.setLevel(logging.DEBUG)
 log.propagate = False
@@ -40,7 +44,7 @@ log.info('Fetched all files info.')
 #     log.info('Attempt Successfully Completed.')
 
 for fid in file_ids:
-    log.info(f'Sending views to {fid}')
+    log.info(f'Sending views to {enc_it(fid)}')
     from free_proxies import all_proxies
     asyncio.run(run_with_proxies(fid, all_proxies), debug=False)
     log.info('Completed.')
@@ -67,15 +71,15 @@ for k, v in views_sent.items():
     if v: log.info(f'File -> {k} got {v} views')
     else:
         error_files.append('https://pixeldrain.com/u/' + k)
-        log.error(f'Something went wrong with file -> {k}')
+        log.error(f'Something went wrong with file -> {enc_it(k)}')
 
 for fid, fd in new_link_states.items():
     if fd and days_from_now(fd.date_last_view) > 60:
         expiring_files.append('https://pixeldrain.com/u/' + fid)
-        log.error(f'Alas! This file -> {fid} gonna expire soon. Manually visit needed.')
+        log.error(f'Alas! This file -> {enc_it(fid)} gonna expire soon. Manually visit needed.')
     if fd and fd.availability != '':
         hotlinked_files.append('https://pixeldrain.com/u/' + fid)
-        log.error(f'Hotlink Protection Found. Reupload or Grab needed.')
+        log.error(f'Hotlink Protection Found for file -> {enc_it(fid)}. Reupload or Grab needed.')
 
 
 log.info('Sending Emails if needed...')
@@ -90,6 +94,7 @@ for row in rows:
     row['last_visit'] = cur_time
 
 updateLinkRows(rows)
+
 log.info('Database Updated.')
 log.info('Task Completed!')
 
