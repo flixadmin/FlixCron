@@ -68,7 +68,7 @@ hotlinked_files = []
 expiring_files = []
 
 for k, v in views_sent.items():
-    if v: log.info(f'File -> {k} got {v} views')
+    if v: log.info(f'File -> {enc_it(k)} got {v} views')
     else:
         error_files.append('https://pixeldrain.com/u/' + k)
         log.error(f'Something went wrong with file -> {enc_it(k)}')
