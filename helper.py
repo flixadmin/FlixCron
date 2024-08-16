@@ -48,7 +48,7 @@ async def getPixelFileData(file_id:str):
             html = await r.text()
             vdata = re.findall(r'viewer_data[| ]=[| ](.*?);', html, re.DOTALL)
             if not vdata: 
-                print(f'This Pixel File ({file_id}) cannot be fetched', flush=True)
+                # print(f'This Pixel File ({file_id}) cannot be fetched', flush=True)
                 return file_id, None
             vdata = json.loads(vdata[0])
             for k, v in vdata['api_response'].items():
