@@ -29,11 +29,10 @@ if len(rows) == 0:
     log.info(f'Exitting since no links fetched.')
     sys.exit()
 
-log.info('Updating links database for temporary...')
+log.info('Updating links database temporary...')
 max_cron_run_hour = 3
-cur_time = int(time.time() / 60) - (24 - max_cron_run_hour) * 60 
 for row in rows:
-    row['last_visit'] = cur_time
+    row['last_visit'] = int(row['last_visit']) + max_cron_run_hour * 60
 
 updateLinkRows(rows)
 log.info('Database Updated.')
