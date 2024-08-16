@@ -66,13 +66,13 @@ async def getAllFileData(file_ids : list[str]):
             fdatas[fid] = fdata
             if fdata: fids.remove(fid)
         att += 1
-        if att > 7: return fdata
+        if att > 7: return fdatas
         await asyncio.sleep(random.randint(3, 7))
     return fdatas
 
 
 if __name__ == '__main__':
-    fds = asyncio.run(getAllFileData(['VMM2fgUy']))
+    fds = asyncio.run(getAllFileData(['fakeid']))
     print(fds)
 
 
