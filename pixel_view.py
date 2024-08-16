@@ -36,4 +36,4 @@ async def run_all_with_proxies(file_ids:list, proxy_list:list):
         await task
 
 # asyncio.run(run_all_with_proxies(['VMM2fgUy', 'avXEHUZe', 'YzmBnmD6'], free_proxies.all_proxies))
-asyncio.run(run_with_proxies('fakeid', free_proxies.all_proxies))
+# asyncio.run(run_with_proxies('fakeid', free_proxies.all_proxies))
