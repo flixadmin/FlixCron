@@ -29,6 +29,15 @@ if len(rows) == 0:
     log.info(f'Exitting since no links fetched.')
     sys.exit()
 
+log.info('Updating links database for temporary...')
+max_cron_run_hour = 3
+cur_time = int(time.time() / 60) - (24 - max_cron_run_hour) * 60 
+for row in rows:
+    row['last_visit'] = cur_time
+
+updateLinkRows(rows)
+log.info('Database Updated.')
+
 file_ids = [row['url'].split('/u/')[1].split('/')[0].split('?')[0] for row in rows]
 random.shuffle(file_ids)
 
@@ -94,7 +103,7 @@ for row in rows:
     row['last_visit'] = cur_time
 
 updateLinkRows(rows)
-
 log.info('Database Updated.')
+
 log.info('Task Completed!')
 
