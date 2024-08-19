@@ -46,7 +46,7 @@ async def getPixelFileData(file_id:str):
     async with aiohttp.ClientSession() as s:
         async with s.get('https://pixeldrain.com/u/' + file_id) as r:
             html = await r.text()
-            vdata = re.findall(r'viewer_data[| ]=[| ](.*?);', html, re.DOTALL)
+            vdata = re.findall(r'viewer_data[| ]=[| ](.*?);\n', html, re.DOTALL)
             if not vdata: 
                 # print(f'This Pixel File ({file_id}) cannot be fetched', flush=True)
                 return file_id, None
@@ -72,7 +72,9 @@ async def getAllFileData(file_ids : list[str]):
 
 
 if __name__ == '__main__':
-    fds = asyncio.run(getAllFileData(['fakeid']))
-    print(fds)
+    fds = asyncio.run(getAllFileData(['6jYACerJ', '1V4j8Hmu']))
+    # print(fds)
+    for i, fd in fds.items():
+        print(i, fd.availability)
 
 
