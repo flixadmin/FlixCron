@@ -1,6 +1,8 @@
 import psycopg2, os, time, aiohttp, re, json, asyncio, random, requests, traceback
 from datetime import datetime, timezone
 
+user_agents = open('ua.txt').readlines()
+random_ua = lambda: random.choice(user_agents).strip()
 
 def days_from_now(time_str):
     return (datetime.now(timezone.utc) - datetime.strptime(time_str, '%Y-%m-%dT%H:%M:%S.%fZ').replace(tzinfo=timezone.utc)).days
@@ -44,11 +46,11 @@ def updateLinkRows(rows:list):
 async def getPixelFileData(file_id:str):
     class FileData: pass
     async with aiohttp.ClientSession() as s:
-        async with s.get('https://pixeldrain.com/u/' + file_id) as r:
+        async with s.get('https://pixeldrain.com/u/' + file_id, headers={'User-Agent': random_ua()}) as r:
             html = await r.text()
             vdata = re.findall(r'viewer_data[| ]=[| ](.*?);\n', html, re.DOTALL)
             if not vdata:
-                print(f'This Pixel File ({file_id}) cannot be fetched. Resp: {html}', flush=True)
+                # print(f'This Pixel File ({file_id}) cannot be fetched. Resp: {html}', flush=True)
                 # open(f'test/{file_id}_{random.randint(100000, 999999)}.html', 'w', encoding='UTF-8').write(html)
                 return file_id, None
             vdata = json.loads(vdata[0])
@@ -62,13 +64,14 @@ async def getAllFileData(file_ids : list[str]):
     fdatas = {}
     att = 0
     while fids:
+        if att!=0: print(f'Retrying {att}...', flush=True)
         for task in asyncio.as_completed([getPixelFileData(fid) for fid in fids]):
             fid, fdata = await task
             fdatas[fid] = fdata
             if fdata: fids.remove(fid)
         att += 1
-        if att > 7: return fdatas
-        await asyncio.sleep(random.randint(3, 7))
+        if att > 70: return fdatas
+        await asyncio.sleep(random.randint(10, 40))
     return fdatas
 
 

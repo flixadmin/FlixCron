@@ -35,4 +35,6 @@ async def run_all_with_proxies(file_ids:list, proxy_list:list):
     for task in asyncio.as_completed(t):
         await task
 
-# asyncio.run(run_with_proxies('fakeid', free_proxies.all_proxies))
+if __name__ == '__main__':
+    print('Started')
+    asyncio.run(run_with_proxies('fe24EfJN', free_proxies.all_proxies))

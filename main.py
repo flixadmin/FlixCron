@@ -41,17 +41,17 @@ file_ids = [row['url'].split('/u/')[1].split('/')[0].split('?')[0] for row in ro
 random.shuffle(file_ids)
 
 log.info('Fetching all files...')
-old_link_states = asyncio.run(getAllFileData(file_ids), debug=False)
+old_link_states = asyncio.run(getAllFileData(file_ids))
 log.info('Fetched all files info.')
 
 for fid in file_ids:
     log.info(f'Sending views to {enc_it(fid)}')
     from free_proxies import all_proxies
-    asyncio.run(run_with_proxies(fid, all_proxies), debug=False)
+    asyncio.run(run_with_proxies(fid, all_proxies))
     log.info('Completed.')
 
 log.info('Fetching all files again...')
-new_link_states = asyncio.run(getAllFileData(file_ids), debug=False)
+new_link_states = asyncio.run(getAllFileData(file_ids))
 log.info('Fetched all files info.')
 
 log.info('Analysing...')
@@ -62,6 +62,7 @@ for fid in file_ids:
     if ols and nls:
         views_sent[fid] = nls.views - ols.views
     else:
+        log.error(f'The file -> {enc_it(fid)} cannot be fetched')
         views_sent[fid] = None
 
 error_files = []
@@ -72,8 +73,7 @@ for k, v in views_sent.items():
     if v: log.info(f'File -> {enc_it(k)} got {v} views')
     else:
         error_files.append('https://pixeldrain.com/u/' + k)
-        r = requests.get('https://pixeldrain.com/u/' + k)
-        log.error(f'Something went wrong with file -> {enc_it(k)} Resp: {r.text}')
+        log.error(f'Something went wrong with file -> {enc_it(k)}')
 
 for fid, fd in new_link_states.items():
     if fd and days_from_now(fd.date_last_view) > 60:
