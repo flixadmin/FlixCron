@@ -1,0 +1,22 @@
+name: Pixel Test
+
+on:
+  workflow_dispatch:
+
+env:
+  FW_DB_URI: ${{secrets.FW_DB_URI}}
+  MAIL_URI: ${{secrets.MAIL_URI}}
+  ENC_IT: ${{secrets.ENC_IT}}
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Requirements
+        run: pip install -U -r requirements.txt
+
+      - name: Run main script
+        run: python practice.py
+
