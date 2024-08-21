@@ -44,13 +44,6 @@ log.info('Fetching all files...')
 old_link_states = asyncio.run(getAllFileData(file_ids), debug=False)
 log.info('Fetched all files info.')
 
-# old_time = time.time()
-# while time.time() < old_time + 30 * 60: # 30 mins
-#     log.info('Sending views to all files')
-#     from free_proxies import all_proxies
-#     asyncio.run(run_all_with_proxies(file_ids, all_proxies), debug=False)
-#     log.info('Attempt Successfully Completed.')
-
 for fid in file_ids:
     log.info(f'Sending views to {enc_it(fid)}')
     from free_proxies import all_proxies
@@ -79,7 +72,8 @@ for k, v in views_sent.items():
     if v: log.info(f'File -> {enc_it(k)} got {v} views')
     else:
         error_files.append('https://pixeldrain.com/u/' + k)
-        log.error(f'Something went wrong with file -> {enc_it(k)}')
+        r = requests.get('https://pixeldrain.com/u/' + k)
+        log.error(f'Something went wrong with file -> {enc_it(k)} Resp: {r.text}')
 
 for fid, fd in new_link_states.items():
     if fd and days_from_now(fd.date_last_view) > 60:
