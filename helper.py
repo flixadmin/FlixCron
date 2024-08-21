@@ -47,7 +47,7 @@ async def getPixelFileData(file_id:str):
         async with s.get('https://pixeldrain.com/u/' + file_id) as r:
             html = await r.text()
             vdata = re.findall(r'viewer_data[| ]=[| ](.*?);\n', html, re.DOTALL)
-            if not vdata: 
+            if not vdata:
                 print(f'This Pixel File ({file_id}) cannot be fetched. Resp: {html}', flush=True)
                 # open(f'test/{file_id}_{random.randint(100000, 999999)}.html', 'w', encoding='UTF-8').write(html)
                 return file_id, None

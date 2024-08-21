@@ -98,8 +98,9 @@ if hotlinked_files: send_mail(f'FlixCron: Grab needed for these hotlinked files 
 
 log.info('Updating links database...')
 cur_time = int(time.time() / 60)
+max_delay = 3 # hours
 for row in rows:
-    row['last_visit'] = cur_time
+    row['last_visit'] = cur_time + random.randint(max_delay * -60, max_delay * 60)
 
 updateLinkRows(rows)
 log.info('Database Updated.')
