@@ -1,7 +1,7 @@
 from helper import getLinkRows, getAllFileData, updateLinkRows, time
 import asyncio, random
 
-rows = getLinkRows(0)[:10]
+rows = getLinkRows(0)[:1]
 
 for row in rows:
     row['last_visit'] = int(time.time() / 60 - 2*24*60)
