@@ -6,6 +6,7 @@ user_agents = open('ua.txt').readlines()
 random_ua = lambda: random.choice(user_agents).strip()
 
 async def view_pixel_drain(file_id, proxy_url=None):
+    await asyncio.sleep(random.randint(3, 30) / 10)
     wc = connect
     kwargs = dict()
     if proxy_url:
