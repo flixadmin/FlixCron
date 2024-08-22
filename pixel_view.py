@@ -18,7 +18,7 @@ async def view_pixel_drain(file_id, proxy_url=None):
                       extra_headers={'Cookie': 'pd_auth_key=83jdid8d83iejd8e84udh73'},
                       **kwargs) as websocket:
             await websocket.send('{"type":"file_stats","data":{"file_id":"' + file_id + '"}}')
-            message = await asyncio.wait_for(websocket.recv(), 60)
+            message = await asyncio.wait_for(websocket.recv(), 120)
             # print(f"Received: {message.strip()}")
     except: pass
 

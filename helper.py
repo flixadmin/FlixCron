@@ -46,20 +46,16 @@ def updateLinkRows(rows:list):
 async def getPixelFileData(file_id:str):
     class FileData: pass
     async with aiohttp.ClientSession() as s:
-        print(f'getPixelFileData: Executing...', flush=True)
         async with s.get('https://pixeldrain.com/u/' + file_id) as r:
             html = await r.text()
-            print('Got HTML', flush=True)
             vdata = re.findall(r'viewer_data[| ]=[| ](.*?);\n', html, re.DOTALL)
             if not vdata:
                 # print(f'This Pixel File ({file_id}) cannot be fetched. Resp: {html}', flush=True)
                 # open(f'test/{file_id}_{random.randint(100000, 999999)}.html', 'w', encoding='UTF-8').write(html)
-                print('Returning None. Resp: '+html, flush=True)
                 return file_id, None
             vdata = json.loads(vdata[0])
             for k, v in vdata['api_response'].items():
                 setattr(FileData, k, v)
-            print('Returning Data', flush=True)
             return file_id, FileData
 
 
@@ -68,15 +64,13 @@ async def getAllFileData(file_ids : list[str]):
     fdatas = {}
     att = 0
     while fids:
-        if att!=0: print(f'Retrying {att}...', flush=True)
-        for task in asyncio.as_completed([getPixelFileData(fid) for fid in fids]):
+        for task in asyncio.as_completed([getPixelFileData(fid_x) for fid_x in fids]):
             fid, fdata = await task
             fdatas[fid] = fdata
             if fdata: fids.remove(fid)
         att += 1
         if att > 70: break
-        await asyncio.sleep(random.randint(10, 40))
-    print('Returning all data', flush=True)
+        await asyncio.sleep(random.randint(5, 20))
     return fdatas
 
 
