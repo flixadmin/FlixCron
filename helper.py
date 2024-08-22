@@ -47,7 +47,7 @@ async def getPixelFileData(file_id:str):
     class FileData: pass
     async with aiohttp.ClientSession() as s:
         print(f'getPixelFileData: Executing...', flush=True)
-        async with s.get('https://pixeldrain.com/u/' + file_id, headers={'User-Agent': random_ua()}) as r:
+        async with s.get('https://pixeldrain.com/u/' + file_id) as r:
             html = await r.text()
             print('Got HTML', flush=True)
             vdata = re.findall(r'viewer_data[| ]=[| ](.*?);\n', html, re.DOTALL)
