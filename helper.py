@@ -46,16 +46,20 @@ def updateLinkRows(rows:list):
 async def getPixelFileData(file_id:str):
     class FileData: pass
     async with aiohttp.ClientSession() as s:
+        print(f'getPixelFileData: Executing...', flush=True)
         async with s.get('https://pixeldrain.com/u/' + file_id, headers={'User-Agent': random_ua()}) as r:
             html = await r.text()
+            print('Got HTML', flush=True)
             vdata = re.findall(r'viewer_data[| ]=[| ](.*?);\n', html, re.DOTALL)
             if not vdata:
                 # print(f'This Pixel File ({file_id}) cannot be fetched. Resp: {html}', flush=True)
                 # open(f'test/{file_id}_{random.randint(100000, 999999)}.html', 'w', encoding='UTF-8').write(html)
+                print('Returning None', flush=True)
                 return file_id, None
             vdata = json.loads(vdata[0])
             for k, v in vdata['api_response'].items():
                 setattr(FileData, k, v)
+            print('Returning Data', flush=True)
             return file_id, FileData
 
 
@@ -70,8 +74,9 @@ async def getAllFileData(file_ids : list[str]):
             fdatas[fid] = fdata
             if fdata: fids.remove(fid)
         att += 1
-        if att > 70: return fdatas
+        if att > 70: break
         await asyncio.sleep(random.randint(10, 40))
+    print('Returning all data', flush=True)
     return fdatas
 
 
