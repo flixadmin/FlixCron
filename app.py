@@ -6,8 +6,10 @@ try: os.mkdir('static')
 except FileExistsError: pass
 
 def keep_alive():
-    try: get('https://flixcron.onrender.com/')
-    except: print('Cannot do keep alive request', flush=True)
+    while 1:
+        time.sleep(60)
+        try: get('https://flixcron.onrender.com/')
+        except: print('Cannot do keep alive request', flush=True)
 
 def list_files_by_creation_time(directory):
     files = [f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f))]
