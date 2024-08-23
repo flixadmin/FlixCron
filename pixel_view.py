@@ -32,6 +32,7 @@ async def run_with_proxies(file_id, proxy_list):
         except asyncio.TimeoutError: pass
         except Exception as err:
             pass
+            print(err)
             # print(traceback.format_exc(), flush=True)
 
 async def run_all_with_proxies(file_ids:list, proxy_list:list):

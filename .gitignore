@@ -2,3 +2,5 @@ test.txt
 test.json
 __pycache__
 static/*.txt
+pr.txt
+urls.json
