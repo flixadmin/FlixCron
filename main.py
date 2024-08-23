@@ -47,7 +47,9 @@ log.info('Fetched all files info.')
 for fid in file_ids:
     log.info(f'Sending views to {enc_it(fid)}')
     from free_proxies import all_proxies
-    asyncio.run(run_with_proxies(fid, [*all_proxies, None]))
+    prs = [*all_proxies, None]
+    for pr in prs:
+        asyncio.run(run_with_proxies(fid, [pr]))
     log.info('Completed.')
 
 log.info('Fetching all files again...')
