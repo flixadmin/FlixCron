@@ -1,3 +1,4 @@
 test.txt
 test.json
 __pycache__
+static/*.txt

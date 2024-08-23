@@ -5,7 +5,10 @@ user_agents = open('ua.txt').readlines()
 random_ua = lambda: random.choice(user_agents).strip()
 
 def days_from_now(time_str):
-    return (datetime.now(timezone.utc) - datetime.strptime(time_str, '%Y-%m-%dT%H:%M:%S.%fZ').replace(tzinfo=timezone.utc)).days
+    try:
+        return (datetime.now(timezone.utc) - datetime.strptime(time_str, '%Y-%m-%dT%H:%M:%S.%fZ').replace(tzinfo=timezone.utc)).days
+    except:
+        return (datetime.now(timezone.utc) - datetime.strptime(time_str, '%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=timezone.utc)).days
 
 def send_mail(subject:str, body:str):
     try:

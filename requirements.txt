@@ -8,3 +8,5 @@ websockets
 websockets-proxy
 psycopg2
 nest-asyncio
+flask
+waitress
