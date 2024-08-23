@@ -1,6 +1,13 @@
 from flask import Flask, redirect
-import os, time, random
+from requests import get
+import os, time, random, threading
 
+try: os.mkdir('static')
+except FileExistsError: pass
+
+def keep_alive():
+    try: get('https://flixcron.onrender.com/')
+    except: print('Cannot do keep alive request', flush=True)
 
 def list_files_by_creation_time(directory):
     files = [f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f))]
@@ -24,6 +31,10 @@ def cron_run():
     os.system(f'python main.py > static/{log_file} 2>&1')
     return redirect(f'/static/{log_file}')
 
+
+t = threading.Thread(target=keep_alive)
+t.daemon = True
+t.start()
 
 if __name__ == '__main__':
     app.run(port=8080, debug=True)
