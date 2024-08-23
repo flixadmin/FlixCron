@@ -6,7 +6,7 @@ aiohttp
 bs4
 websockets
 websockets-proxy
-psycopg2-binary
+psycopg2
 nest-asyncio
 flask
 waitress
