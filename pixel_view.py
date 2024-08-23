@@ -1,4 +1,5 @@
 from websockets_proxy import Proxy, proxy_connect
+from aiohttp_proxy import ProxyConnector
 import asyncio, free_proxies, random, aiohttp
 from websockets import connect
 
@@ -6,7 +7,7 @@ user_agents = open('ua.txt').readlines()
 random_ua = lambda: random.choice(user_agents).strip()
 
 async def view_pixel_drain(file_id, proxy_url=None):
-    async with aiohttp.ClientSession() as s:
+    async with aiohttp.ClientSession(connector=ProxyConnector.from_url(proxy_url)) as s:
         async with s.get('https://pixeldrain.com/u/' + file_id) as r:
             await r.text()
     wc = connect
