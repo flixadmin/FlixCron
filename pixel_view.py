@@ -22,7 +22,7 @@ async def view_pixel_drain(file_id, proxy_url=None):
                     **kwargs) as websocket:
         await websocket.send('{"type":"file_stats","data":{"file_id":"' + file_id + '"}}')
         message = await asyncio.wait_for(websocket.recv(), 60)
-        print(f"Received: {message.strip()}", flush=True)
+        # print(f"Received: {message.strip()}", flush=True)
 
 async def run_with_proxies(file_id, proxy_list):
     t = [view_pixel_drain(file_id, l) for l in proxy_list]

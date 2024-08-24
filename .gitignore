@@ -4,3 +4,4 @@ __pycache__
 static/*.txt
 pr.txt
 urls.json
+env.py
