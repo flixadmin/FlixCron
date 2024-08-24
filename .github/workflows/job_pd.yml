@@ -10,13 +10,13 @@ env:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
       - name: Install Requirements
-        run: pip install -U -r requirements.txt
+        run: pip3 install -U -r requirements.txt
 
       - name: Run main script
-        run: python main.py
+        run: python3 main.py
 
