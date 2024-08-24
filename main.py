@@ -55,7 +55,7 @@ log.info('Sending Views to all files...')
 endpoint = os.environ['PD_ENDPOINT']
 if not endpoint:
     raise Exception('Please set the PD_ENDPOINT environment variable')
-for i in range(random.randint(15, 50)):
+for i in range(random.randint(150, 500)):
     r = requests.post(endpoint, json=file_urls)
     if r.status_code!=200:
         log.info(f'Error in the server: Status code - {r.status_code}')
