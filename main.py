@@ -37,6 +37,7 @@ for row in rows:
 updateLinkRows(rows)
 log.info('Database Updated.')
 
+file_urls = [row['url'] for row in rows]
 file_ids = [row['url'].split('/u/')[1].split('/')[0].split('?')[0] for row in rows]
 random.shuffle(file_ids)
 
@@ -44,11 +45,23 @@ log.info('Fetching all files...')
 old_link_states = asyncio.run(getAllFileData(file_ids))
 log.info('Fetched all files info.')
 
-for fid in file_ids:
-    log.info(f'Sending views to {enc_it(fid)}')
-    from free_proxies import all_proxies
-    asyncio.run(run_with_proxies(fid, [*all_proxies, None]))
-    log.info('Completed.')
+# for fid in file_ids:
+#     log.info(f'Sending views to {enc_it(fid)}')
+#     from free_proxies import all_proxies
+#     asyncio.run(run_with_proxies(fid, [*all_proxies, None]))
+#     log.info('Completed.')
+
+log.info('Sending Views to all files...')
+endpoint = os.environ['PD_ENDPOINT']
+if not endpoint: raise Exception('Please set the PD_ENDPOINT environment variable')
+
+for i in range(1, random.randint(15, 50) + 1):
+    r = requests.post(endpoint, json=file_urls)
+    if r.status_code!=200:
+        log.info(f'Error in the server: Status code - {r.status_code}')
+    time.sleep(random.randint(5, 15))
+
+log.info('Completed!')
 
 log.info('Fetching all files again...')
 new_link_states = asyncio.run(getAllFileData(file_ids))
