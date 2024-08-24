@@ -53,15 +53,29 @@ log.info('Fetched all files info.')
 
 log.info('Sending Views to all files...')
 endpoint = os.environ['PD_ENDPOINT']
-if not endpoint: raise Exception('Please set the PD_ENDPOINT environment variable')
-
-for i in range(1, random.randint(15, 50) + 1):
+if not endpoint:
+    raise Exception('Please set the PD_ENDPOINT environment variable')
+for i in range(random.randint(15, 50)):
     r = requests.post(endpoint, json=file_urls)
     if r.status_code!=200:
         log.info(f'Error in the server: Status code - {r.status_code}')
     time.sleep(random.randint(5, 15))
-
 log.info('Completed!')
+
+log.info('Checking for hotlinked files')
+hfiles = ['https://pixeldrain.com/u/' + fid for fid, fd in old_link_states.items() if fd.availability!='']
+required_views = [fd.downloads - fd.views for fid, fd in old_link_states.items() if fd.availability!='']
+required_views.sort()
+needed_view = next(iter(required_views), 0)
+log.info(f'Found {len(hfiles)} hotlinked files')
+if len(hfiles)!=0:
+    log.info(f'Sending views to hotlinked files')
+    for i in range(needed_view):
+        r = requests.post(endpoint, json=hfiles)
+        if r.status_code != 200:
+            log.info(f'Error in the server: Status code - {r.status_code}')
+        time.sleep(random.randint(5, 15))
+    log.info('Completed!')
 
 log.info('Fetching all files again...')
 new_link_states = asyncio.run(getAllFileData(file_ids))
