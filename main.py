@@ -44,23 +44,22 @@ random.shuffle(file_ids)
 log.info('Fetching all files...')
 old_link_states = asyncio.run(getAllFileData(file_ids))
 log.info('Fetched all files info.')
-
-# for fid in file_ids:
-#     log.info(f'Sending views to {enc_it(fid)}')
-#     from free_proxies import all_proxies
-#     asyncio.run(run_with_proxies(fid, [*all_proxies, None]))
-#     log.info('Completed.')
-
+"""
+for fid in file_ids:
+    log.info(f'Sending views to {enc_it(fid)}')
+    from free_proxies import all_proxies
+    asyncio.run(run_with_proxies(fid, [*all_proxies, None]))
+    log.info('Completed.')
+"""
 log.info('Sending Views to all files...')
 endpoint = os.environ['PD_ENDPOINT']
 if not endpoint:
     raise Exception('Please set the PD_ENDPOINT environment variable')
 for i in range(random.randint(150, 500)):
-    for list_chunk in [file_urls[x:x+50] for x in range(0, len(file_urls), 50)]:
-        r = requests.post(endpoint, json=list_chunk)
-        if r.status_code!=200:
-            log.info(f'Error in the server: Status code - {r.status_code}')
-        time.sleep(random.randint(3, 10))
+    r = requests.post(endpoint, json=file_urls)
+    if r.status_code!=200:
+        log.info(f'Error in the server: Status code - {r.status_code}')
+    time.sleep(random.randint(3, 10))
 log.info('Completed!')
 
 log.info('Checking for hotlinked files')
@@ -72,13 +71,12 @@ log.info(f'Found {len(hfiles)} hotlinked files')
 if len(hfiles)!=0:
     log.info(f'Sending views to hotlinked files')
     for i in range(needed_view):
-        for list_chunk in [hfiles[x:x+50] for x in range(0, len(hfiles), 50)]:
-            r = requests.post(endpoint, json=list_chunk)
-            if r.status_code != 200:
-                log.info(f'Error in the server: Status code - {r.status_code}')
-            time.sleep(random.randint(3, 10))
+        r = requests.post(endpoint, json=hfiles)
+        if r.status_code != 200:
+            log.info(f'Error in the server: Status code - {r.status_code}')
+        time.sleep(random.randint(3, 10))
     log.info('Completed!')
-
+# """
 log.info('Fetching all files again...')
 new_link_states = asyncio.run(getAllFileData(file_ids))
 log.info('Fetched all files info.')

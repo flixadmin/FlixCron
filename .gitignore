@@ -5,3 +5,4 @@ static/*.txt
 pr.txt
 urls.json
 env.py
+test.js

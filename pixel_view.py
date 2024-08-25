@@ -18,7 +18,7 @@ async def view_pixel_drain(file_id, proxy_url=None):
     async with wc("wss://pixeldrain.com/api/file_stats",
                     # origin='https://pixeldrain.com',
                     # user_agent_header=random_ua(),
-                    # extra_headers={'Cookie': 'pd_auth_key=83jdid8d83iejd8e84udh73'},
+                    # extra_headers={'Cookie': 'pd_auth_key=b174e0cea95146f73264'},
                     **kwargs) as websocket:
         await websocket.send('{"type":"file_stats","data":{"file_id":"' + file_id + '"}}')
         # message = await asyncio.wait_for(websocket.recv(), 60)
