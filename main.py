@@ -44,12 +44,16 @@ random.shuffle(file_ids)
 log.info('Fetching all files...')
 old_link_states = asyncio.run(getAllFileData(file_ids))
 log.info('Fetched all files info.')
-"""
-for fid in file_ids:
-    log.info(f'Sending views to {enc_it(fid)}')
-    from free_proxies import all_proxies
-    asyncio.run(run_with_proxies(fid, [*all_proxies, None]))
-    log.info('Completed.')
+# """
+# for fid in file_ids:
+#     log.info(f'Sending views to {enc_it(fid)}')
+#     from free_proxies import all_proxies
+#     asyncio.run(run_with_proxies(fid, [*all_proxies, None]))
+#     log.info('Completed.')
+from free_proxies import all_proxies
+log.info('Sending views to all files')
+for _ in range(random.randint(3,9)):asyncio.run(run_all_with_proxies(file_ids, all_proxies))
+log.info('Completed‌!')
 """
 log.info('Sending Views to all files...')
 endpoint = os.environ['PD_ENDPOINT']
