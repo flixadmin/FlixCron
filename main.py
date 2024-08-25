@@ -63,7 +63,7 @@ for i in range(random.randint(150, 500)):
     r = requests.post(endpoint, json=file_urls)
     if r.status_code!=200:
         log.info(f'Error in the server: Status code - {r.status_code}')
-    time.sleep(random.randint(3, 10))
+    # time.sleep(random.randint(3, 10))
 log.info('Completed!')
 
 log.info('Checking for hotlinked files')
@@ -78,7 +78,7 @@ if len(hfiles)!=0:
         r = requests.post(endpoint, json=hfiles)
         if r.status_code != 200:
             log.info(f'Error in the server: Status code - {r.status_code}')
-        time.sleep(random.randint(3, 10))
+        # time.sleep(random.randint(3, 10))
     log.info('Completed!')
 # """
 log.info('Fetching all files again...')
