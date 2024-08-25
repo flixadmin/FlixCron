@@ -44,7 +44,7 @@ random.shuffle(file_ids)
 log.info('Fetching all files...')
 old_link_states = asyncio.run(getAllFileData(file_ids))
 log.info('Fetched all files info.')
-# """
+"""
 # for fid in file_ids:
 #     log.info(f'Sending views to {enc_it(fid)}')
 #     from free_proxies import all_proxies
