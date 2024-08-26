@@ -59,7 +59,9 @@ log.info('Completed‌!')
 """
 
 try:
-    asyncio.run(send_views_to_pixel_ids(file_ids, random.randint(2, 5)))
+    log.info('Sending views to all files with Scraping Ant')
+    asyncio.run(send_views_to_pixel_ids(file_ids, random.randint(3, 7)))
+    log.info('Completed!')
 except Exception as err:
     log.info('Something went wrong when trying in Scraping Ant. Error: ' + str(err))
     log.info('Trying with the server endpoint...')
