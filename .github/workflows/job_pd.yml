@@ -4,10 +4,7 @@ on:
   workflow_dispatch:
 
 env:
-  FW_DB_URI: ${{secrets.FW_DB_URI}}
-  MAIL_URI: ${{secrets.MAIL_URI}}
-  ENC_IT: ${{secrets.ENC_IT}}
-  PD_ENDPOINT: ${{secrets.PD_ENDPOINT}}
+  SECRET_URL: ${{secrets.SECRET_URL}}
 
 jobs:
   build:
