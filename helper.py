@@ -1,4 +1,4 @@
-import psycopg2, os, time, aiohttp, re, json, asyncio, random, requests, traceback
+import psycopg2, vars, time, aiohttp, re, json, asyncio, random, requests, traceback
 from datetime import datetime, timezone
 
 user_agents = open('ua.txt').readlines()
@@ -12,7 +12,7 @@ def days_from_now(time_str):
 
 def send_mail(subject:str, body:str):
     try:
-        r = requests.post(os.environ['MAIL_URI'], data={'s': subject, 'b': body})
+        r = requests.post(vars.MAIL_URI, data={'s': subject, 'b': body})
         if not r.json()['success']:
             raise Exception('Cannot send email. View server logs.')
     except:
@@ -20,7 +20,7 @@ def send_mail(subject:str, body:str):
 
 def getLinkRows(last_updated_day_ago : int = 0):
     before_time = int(time.time() / 60) - last_updated_day_ago * 24 * 60
-    conn = psycopg2.connect(os.environ.get('FW_DB_URI'))
+    conn = psycopg2.connect(vars.FW_DB_URI)
     cur = conn.cursor()
     cur.execute(f'SELECT id, url, CAST(last_visit AS INTEGER) FROM "link" WHERE CAST(last_visit AS INTEGER) < {before_time}')
     columns = [desc[0] for desc in cur.description]
@@ -32,7 +32,7 @@ def getLinkRows(last_updated_day_ago : int = 0):
 def updateLinkRows(rows:list):
     if not rows:
         return print('No rows to given to update', flush=True)
-    conn = psycopg2.connect(os.environ.get('FW_DB_URI'))
+    conn = psycopg2.connect(vars.FW_DB_URI)
     cur = conn.cursor()
     values = ", ".join([f"({row['id']}, '{row['last_visit']}')" for row in rows])
     query = f"""

@@ -1,11 +1,11 @@
 from pixel_view import run_all_with_proxies, run_with_proxies
+import logging, sys, asyncio, vars
 from helper import *
-import logging, sys, asyncio
 
 import nest_asyncio
 nest_asyncio.apply()
 
-exec(os.environ.get('ENC_IT', 'enc_it = lambda x: x'))
+exec(getattr(vars, 'ENC_IT', 'enc_it = lambda x: x'))
 enc_it = globals()['enc_it']
 
 logging.getLogger('asyncio').disabled = True
@@ -56,7 +56,7 @@ for _ in range(random.randint(3,9)):asyncio.run(run_all_with_proxies(file_ids, a
 log.info('Completed‌!')
 """
 log.info('Sending Views to all files...')
-endpoint = os.environ['PD_ENDPOINT']
+endpoint = vars.PD_ENDPOINT
 if not endpoint:
     raise Exception('Please set the PD_ENDPOINT environment variable')
 for i in range(random.randint(150, 500)):

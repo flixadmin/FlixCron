@@ -1,8 +1,3 @@
-from helper import getLinkRows, updateLinkRows
-import time
+import vars
 
-rows = getLinkRows(0)[:2]
-
-proxies = open('pr.txt').read().strip().split('\n')
-
-
+print(vars.FW_DB_URI)
