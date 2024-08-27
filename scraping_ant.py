@@ -68,6 +68,8 @@ async def send_views_to_pixel_ids(file_ids:list, reqs:int=3):
         if r.status != 200:
             print('Error in Scraping Ant. Status:', r.status, 'Resp:', await r.text(), flush=True)
     
+    if r.status != 200: raise Exception(f'Error in Scraping Ant. Status: {r.status}')
+    
 
 if __name__ == '__main__':
     asyncio.run(send_views_to_pixel_ids(['E7zh9LH1', '2N33Ff4Z', 'iLQrBDSo']))
