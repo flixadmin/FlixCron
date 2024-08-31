@@ -1,5 +1,7 @@
 import psycopg2, vars, time, aiohttp, re, json, asyncio, random, requests, traceback
 from datetime import datetime, timezone
+from json import loads
+from websockets import connect
 
 user_agents = open('ua.txt').readlines()
 random_ua = lambda: random.choice(user_agents).strip()
@@ -46,6 +48,14 @@ def updateLinkRows(rows:list):
     cur.close()
     conn.close()
 
+async def getViewsOfPixelFile(file_id:str):
+    async with connect("wss://pixeldrain.com/api/file_stats") as ws:
+        await ws.send('{"type":"file_stats","data":{"file_id":"' + file_id + '"}}')
+        message = await asyncio.wait_for(ws.recv(), 60)
+        message = loads(message)
+        views = int(message['file_stats']['views'])
+        return views
+
 async def getPixelFileData(file_id:str):
     class FileData: pass
     async with aiohttp.ClientSession() as s:
@@ -59,6 +69,10 @@ async def getPixelFileData(file_id:str):
             vdata = json.loads(vdata[0])
             for k, v in vdata['api_response'].items():
                 setattr(FileData, k, v)
+            try:
+                FileData.views = await getViewsOfPixelFile(file_id)
+            except:
+                pass
             return file_id, FileData
 
 
@@ -73,7 +87,7 @@ async def getAllFileData(file_ids : list[str]):
             if fdata: fids.remove(fid)
         att += 1
         if att > 70: break
-        await asyncio.sleep(random.randint(5, 20))
+        if fids: await asyncio.sleep(random.randint(5, 20))
     return fdatas
 
 
