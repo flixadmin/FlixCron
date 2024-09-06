@@ -46,6 +46,7 @@ async def get_key(min_credit:int = 50, send_mail_on_invalid:bool=False, send_mai
     for task in asyncio.as_completed(tasks):
         r = await task
         d = await r.json()
+        print(d)
         k = r.url.query.get('x-api-key')
         keys[k] = d.get('remained_credits')
 
