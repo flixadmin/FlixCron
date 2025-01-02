@@ -33,7 +33,7 @@ if len(rows) == 0:
 log.info('Updating links database temporary...')
 max_cron_run_hour = 3
 for row in rows:
-    row['last_visit'] = int(row['last_visit']) + max_cron_run_hour * 60
+    row['lastVisit'] += timedelta(hours=max_cron_run_hour)
 
 updateLinkRows(rows)
 log.info('Database Updated.')
@@ -129,10 +129,9 @@ if hotlinked_files: send_mail(f'FlixCron: Grab needed for these hotlinked files 
 
 
 log.info('Updating links database...')
-cur_time = int(time.time() / 60)
 max_delay = 3 # hours
 for row in rows:
-    row['last_visit'] = cur_time + random.randint(max_delay * -60, max_delay * 60)
+    row['lastVisit'] = datetime.now() + timedelta(minutes=random.randint(max_delay * -60, max_delay * 60))
 
 updateLinkRows(rows)
 log.info('Database Updated.')

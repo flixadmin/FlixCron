@@ -1,5 +1,5 @@
 import psycopg2, vars, time, aiohttp, re, json, asyncio, random, requests, traceback
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from json import loads
 from websockets import connect
 
@@ -21,10 +21,10 @@ def send_mail(subject:str, body:str):
         print(traceback.format_exc(), flush=True)
 
 def getLinkRows(last_updated_day_ago : int = 0):
-    before_time = int(time.time() / 60) - last_updated_day_ago * 24 * 60
+    before_time = datetime.now() - timedelta(days=last_updated_day_ago)
     conn = psycopg2.connect(vars.FW_DB_URI)
     cur = conn.cursor()
-    cur.execute(f'SELECT id, url, CAST(last_visit AS INTEGER) FROM "link" WHERE CAST(last_visit AS INTEGER) < {before_time}')
+    cur.execute(f'SELECT id, url, "lastVisit" FROM "Link" WHERE "lastVisit" <= %s OR "lastVisit" IS NULL', [before_time])
     columns = [desc[0] for desc in cur.description]
     rows = [dict(zip(columns, row)) for row in cur.fetchall()]
     cur.close()
@@ -36,12 +36,12 @@ def updateLinkRows(rows:list):
         return print('No rows to given to update', flush=True)
     conn = psycopg2.connect(vars.FW_DB_URI)
     cur = conn.cursor()
-    values = ", ".join([f"({row['id']}, '{row['last_visit']}')" for row in rows])
+    values = ", ".join([f"({row['id']}, '{row['lastVisit'].strftime('%Y-%m-%d %H:%M:%S')}'::timestamp)" for row in rows])
     query = f"""
-    UPDATE "link"
-    SET last_visit = v.last_visit
-    FROM (VALUES {values}) v(id, last_visit)
-    WHERE v.id = link.id
+    UPDATE "Link"
+    SET "lastVisit" = v."lastVisit"
+    FROM (VALUES {values}) v(id, "lastVisit")
+    WHERE v.id = "Link".id
     """
     cur.execute(query)
     conn.commit()
@@ -96,5 +96,13 @@ if __name__ == '__main__':
     # print(fds)
     for i, fd in fds.items():
         print(i, fd.availability)
+
+    # rows = getLinkRows(0)[:2]
+    # for r in rows:
+    #     r['lastVisit'] = datetime(2016,5,4)
+    # print(len(rows))
+    # updateLinkRows(rows)
+
+    # print(getLinkRows(70))
 
 
