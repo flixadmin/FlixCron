@@ -75,7 +75,6 @@ async def getPixelFileData(file_id:str):
                 pass
             return file_id, FileData
 
-
 async def getAllFileData(file_ids : list[str]):
     fids = file_ids.copy()
     fdatas = {}
@@ -90,19 +89,32 @@ async def getAllFileData(file_ids : list[str]):
         if fids: await asyncio.sleep(random.randint(5, 20))
     return fdatas
 
+async def updateFileLastView(file_id : str):
+    """ Update the last visit date of files by downloading 2% of file """
+    async with aiohttp.ClientSession() as s:
+        async with s.get(f'https://pixeldrain.com/api/file/{file_id}?download') as r:
+            total_size = int(r.headers.get("Content-Length", 0))
+            downloaded_size = 0
+            async for chunk in r.content.iter_chunked(1024 * 10 ** 3):
+                downloaded_size += len(chunk)
+                percent = (downloaded_size / total_size) * 100 if total_size else 0
+                if percent >= 2: break
+    return file_id
+
+async def updateAllFileLastView(file_ids : list[str]):
+    fids = file_ids.copy()
+    while fids:
+        for task in asyncio.as_completed([updateFileLastView(i) for i in fids]):
+            try: fid = await task
+            except Exception as err: continue
+            fids.remove(fid)
+
 
 if __name__ == '__main__':
-    fds = asyncio.run(getAllFileData(['6jYACerJ', '1V4j8Hmu']))
-    # print(fds)
-    for i, fd in fds.items():
-        print(i, fd.availability)
+    # fds = asyncio.run(getAllFileData(['6jYACerJ', '1V4j8Hmu']))
+    # for i, fd in fds.items():
+    #     print(i, fd.availability)
 
-    # rows = getLinkRows(0)[:2]
-    # for r in rows:
-    #     r['lastVisit'] = datetime(2016,5,4)
-    # print(len(rows))
-    # updateLinkRows(rows)
-
-    # print(getLinkRows(70))
+    asyncio.run(updateFileLastView('rmJXJF2s'))
 
 

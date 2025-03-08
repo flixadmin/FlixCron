@@ -1,6 +1,5 @@
 from pixel_view import run_all_with_proxies, run_with_proxies
 from scraping_ant import send_views_to_pixel_ids
-from browserVisitor import visitPages
 import logging, sys, asyncio, vars
 from helper import *
 
@@ -89,6 +88,11 @@ except Exception as err:
         log.info('Completed!')
 
 
+log.info('Updating Last View date of files...')
+asyncio.run(updateAllFileLastView(file_ids))
+log.info('Completed!')
+
+
 log.info('Fetching all files again...')
 new_link_states = asyncio.run(getAllFileData(file_ids))
 log.info('Fetched all files info.')
@@ -121,13 +125,6 @@ for fid, fd in new_link_states.items():
     if fd and fd.availability != '':
         hotlinked_files.append('https://pixeldrain.com/u/' + fid)
         log.error(f'Hotlink Protection Found for file -> {enc_it(fid)}. Reupload or Grab needed.')
-
-
-if expiring_files:
-    log.info('Visiting the soon to be expired files...')
-    try: visitPages(expiring_files)
-    except Exception as err:
-        log.info('Error while visiting links: ' + str(err))
 
 
 log.info('Sending Emails if needed...')
