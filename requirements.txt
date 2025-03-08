@@ -10,4 +10,3 @@ psycopg2
 nest-asyncio
 flask
 waitress
-DrissionPage
