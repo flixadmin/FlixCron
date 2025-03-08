@@ -94,6 +94,9 @@ async def updateFileLastView(file_id : str):
     async with aiohttp.ClientSession() as s:
         async with s.get(f'https://pixeldrain.com/api/file/{file_id}?download') as r:
             total_size = int(r.headers.get("Content-Length", 0))
+            if total_size < 500 and total_size != 0:
+                await asyncio.sleep(5)
+                return await updateFileLastView(file_id)
             downloaded_size = 0
             async for chunk in r.content.iter_chunked(1024 * 10 ** 3):
                 downloaded_size += len(chunk)
@@ -115,6 +118,7 @@ if __name__ == '__main__':
     # for i, fd in fds.items():
     #     print(i, fd.availability)
 
-    asyncio.run(updateFileLastView('rmJXJF2s'))
+    asyncio.run(updateAllFileLastView(['eukLgo9i', 'Ss4P1dxN', 'mEqF7TvC', 'rwpAXm1c', '2pSrNHAk', 'bKyqyTDx',
+                'KH23j6X3', 'DQcQcci7', 'H4Duk1bR', 'Pj1heDFe', 'Ev7VjqtK', 'yD71HmCm', 'emxNpP9F', 'fAh4Gpir', 'ZxDgxpPv']))
 
 
