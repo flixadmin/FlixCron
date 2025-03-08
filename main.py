@@ -1,5 +1,6 @@
 from pixel_view import run_all_with_proxies, run_with_proxies
 from scraping_ant import send_views_to_pixel_ids
+from browserVisitor import visitPages
 import logging, sys, asyncio, vars
 from helper import *
 
@@ -122,9 +123,16 @@ for fid, fd in new_link_states.items():
         log.error(f'Hotlink Protection Found for file -> {enc_it(fid)}. Reupload or Grab needed.')
 
 
+if expiring_files:
+    log.info('Visiting the soon to be expired files...')
+    try: visitPages(expiring_files)
+    except Exception as err:
+        log.info('Error while visiting links: ' + str(err))
+
+
 log.info('Sending Emails if needed...')
 if error_files: send_mail(f'FlixCron: Files that cannon be accessed ({random.randint(11111, 99999)})', '<br>'.join([f'{i+1}. {u}' for i, u in enumerate(error_files)]))
-if expiring_files: send_mail(f'FlixCron: These files are gonna expire soon ({random.randint(11111, 99999)})', '<br>'.join([f'{i+1}. {u}' for i, u in enumerate(expiring_files)]))
+if expiring_files:send_mail(f'FlixCron: These files are gonna expire soon ({random.randint(11111, 99999)})', '<br>'.join([f'{i+1}. {u}' for i, u in enumerate(expiring_files)]))
 if hotlinked_files: send_mail(f'FlixCron: Grab needed for these hotlinked files ({random.randint(11111, 99999)})', '<br>'.join([f'{i+1}. {u}' for i, u in enumerate(hotlinked_files)]))
 
 

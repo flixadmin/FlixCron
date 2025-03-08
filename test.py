@@ -1,3 +1,7 @@
-import vars
+from helper import getPixelFileData
+import asyncio
 
-print(vars.FW_DB_URI)
+d = asyncio.run(getPixelFileData('o3xpCTPw'))
+
+print(d[1].date_last_view)
+
