@@ -1,4 +1,3 @@
-from pixel_view import run_all_with_proxies, run_with_proxies
 from scraping_ant import send_views_to_pixel_ids
 import logging, sys, asyncio, vars
 from helper import *
