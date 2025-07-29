@@ -22,15 +22,19 @@ log.addHandler(handler)
 
 
 log.info('Fetching Links...')
-rows = getLinkRows(1)
+rows = getLinkRows(7)
 log.info(f'Fetched {len(rows)} links.')
+
+if len(rows) > 200:
+    rows = rows[:200]
+    log.info(f'Keeping only 200 links to prevent overload')
 
 if len(rows) == 0:
     log.info(f'Exitting since no links fetched.')
     sys.exit()
 
 log.info('Updating links database temporary...')
-max_cron_run_hour = 3
+max_cron_run_hour = 5
 for row in rows:
     row['lastVisit'] += timedelta(hours=max_cron_run_hour)
 
@@ -133,7 +137,7 @@ if hotlinked_files: send_mail(f'FlixCron: Grab needed for these hotlinked files 
 
 
 log.info('Updating links database...')
-max_delay = 3 # hours
+max_delay = 24 # hours
 for row in rows:
     row['lastVisit'] = datetime.now() + timedelta(minutes=random.randint(max_delay * -60, max_delay * 60))
 
